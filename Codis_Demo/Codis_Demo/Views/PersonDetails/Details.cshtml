@@ -1,0 +1,92 @@
+﻿@model IEnumerable<Codis_Demo.Models.PersonDetails>
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Details</title>
+</head>
+<body>
+    <p>
+
+        <input type="text" placeholder="Search By Name.." id="filterText">
+        <input class="btn btn-default" value="Search" name="submitButton" id="btnSave" type="button">
+    </p>
+    <div id="dialog">
+
+    </div>
+    <br />
+    <h2>Persons List</h2> @Html.ActionLink("Create New", "Create")
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NickName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateOfBirth)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NickName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateOfBirth)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("View Address", "Details", "Address", new { id = item.Id }, null) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                </td>
+            </tr>
+        }
+
+    </table>
+</body>
+</html>
+@section Scripts
+{
+    <script type="text/javascript">
+
+    
+
+        $("#btnSave").click(function () {
+          $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("Search")',
+                    data: '{filter: "' + $("#filterText").val() + '" }',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "html",
+                    success: function (response) {
+                        $('#dialog').html(response);
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+    });
+
+
+    </script>
+}
